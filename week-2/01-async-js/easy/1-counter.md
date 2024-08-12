@@ -4,6 +4,7 @@ We have already covered this in the second lesson, but as an easy recap try to c
 It should go up as time goes by in intervals of 1 second
 
 ```
+javascript
 function timer(counter,stopper){
    const interval=setInterval(()=>{
         console.log(counter);
