@@ -3,21 +3,54 @@
  * Write a function that uses the 3 functions to wait for all 3 promises to resolve using Promise.all,
  * Return a promise.all which return the time in milliseconds it takes to complete the entire operation.
  */
-
 function wait1(t) {
+    return new Promise((resolve, reject) => {
+       setTimeout(() => {
+          console.log("Hello from wait1");
+          resolve("Prome 1 has Resolved");
+       }, t * 1000);
+    });
+ }
+ 
+ function wait2(t) {
+    return new Promise((resolve, reject) => {
+       setTimeout(() => {
+          console.log("Hello from wait2");
+          resolve("Prome 2 has Resolved");
+       }, t * 1000);
+    });
+ }
+ 
+ function wait3(t) {
+    return new Promise((resolve, reject) => {
+       setTimeout(() => {
+          console.log("Hello from wait3");
+          resolve("Prome 3 has Resolved");
+       }, t * 1000);
+    });
+ }
+ 
+ function calculateTime(t1, t2, t3) {
+    Promise.all([wait1(t1), wait2(t2), wait3(t3)])
+    .then((res)=>{
+           console.log(res);
+    })
+ }
+ 
+ calculateTime(2,1,4);
 
-}
 
-function wait2(t) {
+/*
+output
 
-}
+Hello from wait2
+Hello from wait1
+Hello from wait3
+[
+  'Prome 1 has Resolved',
+  'Prome 2 has Resolved',
+  'Prome 3 has Resolved'
+] 
 
-function wait3(t) {
-
-}
-
-function calculateTime(t1, t2, t3) {
-
-}
-
-module.exports = calculateTime;
+*/
+// module.exports = calculateTime;
