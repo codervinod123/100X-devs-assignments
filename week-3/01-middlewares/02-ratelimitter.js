@@ -11,13 +11,31 @@ const app = express();
 // You have been given a numberOfRequestsForUser object to start off with which
 // clears every one second
 
-let numberOfRequestsForUser = {};
+let numberOfRequestsForUser = {count:0};
+
+let currTime=Date.now();
+
+function rateLimitFun(req,res,next){
+   if(numberOfRequestsForUser.count>5){
+        return res.status(404).json({
+            message:"User has send more than 5 request in a decided time",
+            statuscode:404,
+            success:false
+        })
+   }
+  numberOfRequestsForUser.count=numberOfRequestsForUser.count+1;
+  console.log("Round Called=>",numberOfRequestsForUser.count);
+  next();
+}
+
+app.use(rateLimitFun);
+
 setInterval(() => {
-    numberOfRequestsForUser = {};
-}, 1000)
+    numberOfRequestsForUser = {count:0};
+}, 9000)
 
 app.get('/user', function(req, res) {
-  res.status(200).json({ name: 'john' });
+   res.status(200).json({ name: 'Vinod' });
 });
 
 app.post('/user', function(req, res) {

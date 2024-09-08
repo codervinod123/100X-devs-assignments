@@ -1,6 +1,11 @@
 const jwt = require('jsonwebtoken');
 const jwtPassword = 'secret';
+const express=require('express');
 
+
+const app=express();
+
+app.use(express.json());
 
 /**
  * Generates a JWT for a given username and password.
@@ -15,6 +20,8 @@ const jwtPassword = 'secret';
  */
 function signJwt(username, password) {
     // Your code here
+    const jw=jwt.sign({username:username,password:password}, 'VinodPr', { expiresIn: 60 * 60 });
+    return jw;
 }
 
 /**
@@ -27,6 +34,16 @@ function signJwt(username, password) {
  */
 function verifyJwt(token) {
     // Your code here
+    const res=jwt.verify(token,"VinodPr",(error)=>{
+        if(error){
+            console.log("error occured");
+            return false;
+        }else{
+            console.log("Verifired token");
+            return true;
+        }
+    });
+  
 }
 
 /**
@@ -36,14 +53,57 @@ function verifyJwt(token) {
  * @returns {object|false} The decoded payload of the JWT if the token is a valid JWT format.
  *                         Returns false if the token is not a valid JWT format.
  */
-function decodeJwt(token) {
+async function decodeJwt(token) {
     // Your code here
+    const res=jwt.verify(token,"VinodPr");
+    return res;
 }
 
 
-module.exports = {
-  signJwt,
-  verifyJwt,
-  decodeJwt,
-  jwtPassword,
-};
+
+app.get("/tokengeneration",(req,res)=>{
+    try {
+        const resp=signJwt(req.body.username,req.body.password);
+        res.status(200).json({
+           data: resp,
+           message: "Succcess",
+           statuscode: 200,
+           error: null,
+        })
+    } catch (error) {
+     console.log("Error error error",error);
+     res.status(404).json({
+        message:"Failed",
+        statuscode:404,
+        error:error,
+     }) 
+    }
+})
+
+
+
+app.get("/decodeToken",async(req,res)=>{
+    try {
+        const response=await decodeJwt(req.headers.token);
+        res.status(200).json({
+           data: response,
+           message: "Succcess",
+           statuscode: 200,
+           error: null,
+        })
+    } catch (error) {
+     console.log("Error error error",error);
+     res.status(404).json({
+        message:"Failed",
+        statuscode:404,
+        error:error,
+     }) 
+    }
+})
+
+
+app.listen(3000,()=>{
+    console.log("App is running on port no 3000");
+})
+
+
